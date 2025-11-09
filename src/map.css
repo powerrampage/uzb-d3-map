@@ -1,0 +1,43 @@
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.map-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.map-region {
+  cursor: pointer;
+  transition: fill 100ms ease;
+  filter: drop-shadow(0px 2px 4px #60617029) drop-shadow(0px 0px 1px #28293D0A);
+}
+
+.map-region:hover:not(.map-region-active) {
+  fill: #819feb;
+}
+
+.map-label {
+  font-family: inherit;
+  font-weight: 400;
+  cursor: pointer;
+  width: auto;
+  transition: color 160ms ease;
+}
+
+.map-label:hover .map-label-name {
+  color: #325ECD;
+}
+
+.map-label-active .map-label {
+  color: #325ECD;
+  font-weight: 700;
+}
+
+.map-label-hover .map-label {
+  color: #819feb;
+}
