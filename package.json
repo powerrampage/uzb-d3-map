@@ -1,6 +1,6 @@
 {
   "name": "uzb-d3-map",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A flexible, customizable SVG map component for Uzbekistan built with D3 and React",
   "main": "dist/index.js",
   "module": "dist/index.js",
