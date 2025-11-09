@@ -349,12 +349,17 @@ function renderLabels(
 
     let foreignObj = g.select<SVGForeignObjectElement>("foreignObject");
     if (foreignObj.empty()) {
+      // Set a more generous initial width to allow content to expand naturally
+      // Use 2x the estimated width to prevent clipping during measurement
+      const initialWidth = Math.max(d.w * 2, 200);
+      const initialHeight = d.h;
+      
       foreignObj = g
         .append("foreignObject")
-        .attr("x", d.x - 5)
-        .attr("y", d.y - d.h * 0.5)
-        .attr("width", d.w)
-        .attr("height", d.h);
+        .attr("x", d.x - initialWidth * 0.5)
+        .attr("y", d.y - initialHeight * 0.5)
+        .attr("width", initialWidth)
+        .attr("height", initialHeight);
     }
 
     const container = foreignObj.node();
@@ -363,8 +368,10 @@ function renderLabels(
     let root = rootMap.get(d.key);
     if (!root) {
       const div = document.createElement("div");
-      div.style.width = "100%";
-      div.style.height = "100%";
+      // Don't constrain width/height - let content determine size
+      div.style.width = "max-content";
+      div.style.height = "auto";
+      div.style.display = "inline-block";
       container.appendChild(div);
       root = createRoot(div);
       rootMap.set(d.key, root);
@@ -376,7 +383,12 @@ function renderLabels(
         labelNode: d,
         customRender: labelRender,
         onDimensionsChange: (width, height) => {
+          // Update foreignObject dimensions
           foreignObj.attr("width", width).attr("height", height);
+          // Adjust x position to keep label centered (or adjust based on labelNode.x)
+          // The x position should be based on the label's center point
+          foreignObj.attr("x", d.x - width * 0.5);
+          foreignObj.attr("y", d.y - height * 0.5);
         },
       })
     );

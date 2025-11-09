@@ -47,40 +47,56 @@ export const LabelRenderer: React.FC<LabelRendererProps> = ({
   React.useEffect(() => {
     if (!labelContent || !containerRef.current) return;
 
-    const timeoutId = setTimeout(() => {
-      const rect = containerRef.current?.getBoundingClientRect();
-      if (rect) {
-        const padX = 10;
-        const padY = 8;
-        const newWidth = Math.ceil(rect.width) + padX * 2;
-        const newHeight = Math.ceil(rect.height) + padY * 2;
+    const measureContent = () => {
+      const container = containerRef.current;
+      if (!container) return;
 
-        if (onDimensionsChange) {
-          onDimensionsChange(newWidth, newHeight);
-        }
-      } else {
-        measureElementDimensions(labelContent as React.ReactElement)
-          .then((dims) => {
-            const padX = 10;
-            const padY = 8;
-            const newWidth = dims.width + padX * 2;
-            const newHeight = dims.height + padY * 2;
+      const originalWidth = container.style.width;
+      const originalHeight = container.style.height;
+      container.style.width = "max-content";
+      container.style.height = "auto";
 
-            if (onDimensionsChange) {
-              onDimensionsChange(newWidth, newHeight);
-            }
-          })
-          .catch((error) => {
-            console.warn("Failed to measure label dimensions:", error);
-          });
-      }
-    }, 0);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (!container) return;
 
-    return () => clearTimeout(timeoutId);
+          const rect = container.getBoundingClientRect();
+          const scrollWidth = container.scrollWidth;
+          const scrollHeight = container.scrollHeight;
+
+          const padX = 10;
+          const padY = 8;
+          const newWidth = Math.ceil(Math.max(rect.width, scrollWidth)) + padX * 2;
+          const newHeight = Math.ceil(Math.max(rect.height, scrollHeight)) + padY * 2;
+
+          container.style.width = originalWidth;
+          container.style.height = originalHeight;
+
+          if (onDimensionsChange && (newWidth > 0 && newHeight > 0)) {
+            onDimensionsChange(newWidth, newHeight);
+          }
+        });
+      });
+    };
+
+    const timeoutId = setTimeout(measureContent, 0);
+    const delayedTimeoutId = setTimeout(measureContent, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(delayedTimeoutId);
+    };
   }, [labelContent, onDimensionsChange]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+    <div
+      ref={containerRef}
+      style={{
+        width: "max-content",
+        height: "auto",
+        display: "inline-block"
+      }}
+    >
       {labelContent}
     </div>
   );

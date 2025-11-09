@@ -10,14 +10,14 @@ export const labelConfig: Partial<Record<string, LabelCfg>> = {
   "30": { dotDx: -5, dotDy: -5, side: "bottom", tiltDeg: 0, h: 0, v: 100 },
   "3": { dotDx: -5, dotDy: -5, side: "bottom", tiltDeg: 0, h: 0, v: 50 },
   "35": {
-    dotDx: -100,
+    dotDx: -50,
     dotDy: 0,
     side: "bottom",
     tiltDeg: 0,
     angleDeg: 120,
-    turnDeg: -10,
+    turnDeg: -100,
     h: 100,
-    v: 150,
+    v: 50,
   },
   "33": {
     dotDx: -30,
@@ -62,7 +62,7 @@ export const labelConfig: Partial<Record<string, LabelCfg>> = {
     v: 50,
   },
   "22": { side: "bottom", tiltDeg: 0, h: 0, v: 80 },
-  "24": { dotDx: 5, dotDy: 0, side: "bottom", tiltDeg: 0, h: 0, v: 80 },
+  "24": { dotDx: 5, dotDy: 0, side: "bottom", tiltDeg: 0, h: 15, v: 40 },
 };
 
 /**
